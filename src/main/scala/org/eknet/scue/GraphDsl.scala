@@ -17,6 +17,7 @@
 package org.eknet.scue
 
 import com.tinkerpop.blueprints._
+import com.tinkerpop.blueprints.TransactionalGraph.Conclusion
 
 /**
  * @author Eike Kettner eike.kettner@gmail.com
@@ -88,6 +89,16 @@ object GraphDsl {
 
   def edges(implicit db: Graph) = db.getEdges.toIterable
 
+  def withTx[A](f: => A)(implicit db: TransactionalGraph) = {
+    val tx = Transaction.start
+    try {
+      val x = f
+      tx.success()
+      x
+    } finally {
+      tx.finish()
+    }
+  }
 }
 
 final class EdgeOut(v: Vertex, label: String) {
