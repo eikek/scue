@@ -18,8 +18,8 @@ object OrientDbFactory {
   def createDb(name: String) = new OrientGraph(OrientDbFactory.dbUrl(name))
   def createDb = new OrientGraph(OrientDbFactory.nextDb)
 
-  private def nextDb = dbUrl("testdb"+counter.getAndIncrement)
-  private def dbUrl(name: String) = "local://"+ new File(databaseDir, name).getAbsolutePath
+  def nextDb = dbUrl("testdb"+counter.getAndIncrement)
+  def dbUrl(name: String) = "local://"+ new File(databaseDir, name).getAbsolutePath
 
   private def newDir(path: String) = {
     val p = path.replace("/", File.separator)

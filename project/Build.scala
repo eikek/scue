@@ -61,6 +61,7 @@ object RootBuild extends Build {
     scalacOptions ++= Seq("-unchecked", "-deprecation"),
     publishMavenStyle := true,
     publishTo := Some("eknet-maven2" at "https://eknet.org/maven2"),
+    publishArtifact in Test := true,
     credentials += Credentials(Path.userHome / ".ivy2" / ".credentials"),
     pomIncludeRepository := (_ => false),
     pomExtra := <licenses>

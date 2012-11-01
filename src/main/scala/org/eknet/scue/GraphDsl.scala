@@ -32,6 +32,12 @@ object GraphDsl {
   implicit def toRichEdge(e: Edge): RichEdge= new RichEdge(e)
   implicit def toEdge(e: RichEdge): Edge = e.e
 
+  implicit def any2PropertyAssoc(x: String): PropertyAssoc = new PropertyAssoc(x)
+
+  type Property = (String, Any)
+
+  implicit def mapToTuples[A](map: Map[String, A]) = map.toSeq
+
   /**
    * Creates a new vertex and adds it to the graph.
    * @param graph
@@ -47,7 +53,11 @@ object GraphDsl {
    * Creates a new vertex and adds it to the graph.
    * @return
    */
-  def newVertex(implicit graph: Graph): Vertex = newVertex( v => () )
+  def newVertex(implicit graph: Graph): Vertex = newVertex(v => ())
+
+  def newVertex(props: Property*)(implicit graph: Graph): Vertex = newVertex(v => {
+    props.foreach(p => v(p._1) = p._2)
+  })
 
   val vertexClass = classOf[Vertex]
   val edgeClass = classOf[Edge]
@@ -57,35 +67,34 @@ object GraphDsl {
    * if it does not already exists. The vertex is indexed by
    * the given key.
    *
-   * @param key the key for the property
-   * @param value the property value
+   * @param p the key-value property that is indexed and used to lookup existing vertex
    * @param init optional function to further initialize the new vertex.
    *             this is only used if the vertex does not already
    *             exists and is therefore created.
    * @return
    */
-  def vertex(key: String, value: AnyRef, init: Vertex => Unit = v => ())(implicit graph: KeyIndexableGraph) = {
+  def vertex(p: Property, init: Vertex => Unit = v => ())(implicit graph: KeyIndexableGraph) = {
     import collection.JavaConversions._
 
-    graph.getIndexedKeys(vertexClass).find(_ == key) getOrElse {
-      graph.createKeyIndex(key, vertexClass)
+    graph.getIndexedKeys(vertexClass).find(_ == p._1) getOrElse {
+      graph.createKeyIndex(p._1, vertexClass)
     }
 
-    graph.getVertices(key, value).find(v => v.getProperty(key) == value) getOrElse {
+    graph.getVertices(p._1, p._2).find(v => v.has(p)) getOrElse {
       val v = graph.addVertex()
-      v.setProperty(key, value)
+      v(p._1) = p._2
       init(v)
       v
     }
   }
 
-  def vertices(key: String, value: AnyRef)(implicit db: Graph) =
-    db.getVertices(key, value).toIterable
+  def vertices(p: Property)(implicit db: Graph) =
+    db.getVertices(p._1, p._2).toIterable
 
   def vertices(implicit db: Graph) = db.getVertices.toIterable
 
-  def edges(key: String, value: AnyRef)(implicit db: Graph) =
-    db.getEdges(key, value).toIterable
+  def edges(p: Property)(implicit db: Graph) =
+    db.getEdges(p._1, p._2).toIterable
 
   def edges(implicit db: Graph) = db.getEdges.toIterable
 
@@ -237,12 +246,14 @@ class RichEdge(val e: Edge) extends RichElement(e) {
 }
 class RichElement(el: Element) {
   import collection.JavaConversions._
+  import GraphDsl.Property
 
-  def get[A](key:String) = el.getProperty(key).asInstanceOf[A]
-  def apply(key: String) = el.getProperty(key)
-  def update[A](key: String, value: A): this.type = { el.setProperty(key, value); this }
-  def +=(t: (String, Any)): this.type = { update(t._1, t._2); this }
-  def -=(key: String): this.type = { el.removeProperty(key); this }
+  def get[A](key:String) = Option(el.getProperty(key)).map(_.asInstanceOf[A])
+  def apply(key: String) = Option(el.getProperty(key))
+  def update(p: Property): this.type = { el.setProperty(p._1, p._2); this }
+  def +=(t: Property*): this.type = { t.foreach(el => update(el._1, el._2)); this }
+  def -=(keys: String*): this.type = { keys.foreach(k => el.removeProperty(k)); this }
+  def has(t: Property*) = t.foldLeft(true)((b, t) => b && get(t._1) == Option(t._2))
   def keySet = el.getPropertyKeys.toSet
 }
 
@@ -263,4 +274,8 @@ class EdgeIterable(v: Vertex, dir: Direction, labels: Seq[String]) extends Itera
   def foreachEnd[A](f: Vertex => A) { ends foreach f }
   def mapEnds[A](f: Vertex => A) = ends map f
 
+}
+
+final class PropertyAssoc(val x: String) {
+  @inline def := [B](y: B): (String, B) = Tuple2(x, y)
 }

@@ -46,13 +46,40 @@ class CreationSuite extends FunSuite with ShouldMatchers with BeforeAndAfter {
   test ("create single vertex") {
     implicit val db = OrientDbFactory.createDb
     var v0, v1: Vertex = null
-    withTx { v0 = vertex("name", "vertexus") }
-    withTx { v1 = vertex("name", "vertexus") }
+    withTx { v0 = vertex("name" := "vertexus") }
+    withTx { v1 = vertex("name" := "vertexus") }
 
     v0 should be (v1)
 
     vertices should have size (1)
     vertices.head should be (v0)
     vertices.head should be (v1)
+  }
+
+  test ("create vertex with properties") {
+    implicit val db = OrientDbFactory.createDb
+    withTx {
+      vertex("name" := "ref") --> "label" --> newVertex("name" := "test", "redirect" := true)
+    }
+    val v = vertices("name" := "test").head
+    v("redirect") should be (Some(true))
+  }
+
+  test ("create vertex with properties from map") {
+    val props = Map(
+      "name" -> "soldout",
+      "redirect" -> true,
+      "age" -> 23
+    )
+
+    implicit val db = OrientDbFactory.createDb
+    withTx {
+      vertex("name" := "ref") --> "label" --> newVertex(props: _*)
+    }
+    val v = vertices("name" := "soldout").head
+    v.has("redirect" := true) should be (true)
+    v.has("age" := 23) should be (true)
+    v("redirect") should be (Some(true))
+    v("age") should be (Some(23))
   }
 }
