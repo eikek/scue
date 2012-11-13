@@ -19,12 +19,14 @@ import Keys._
 import Dependencies._
 
 object Version {
-  val slf4j = "1.6.4"
-  val logback = "1.0.1"
+  val slf4j = "1.7.2"
+  val logback = "1.0.7"
   val scalaTest = "2.0.M4"
   val grizzled = "0.6.9"
   val scala = "2.9.2"
   val blueprints = "2.1.0"
+  val titan = "0.1.0"
+  val guava = "13.0.1"
 }
 
 object Dependencies {
@@ -35,7 +37,8 @@ object Dependencies {
   val blueprintsNeo4j = "com.tinkerpop.blueprints" % "blueprints-neo4j-graph" % Version.blueprints % "test" withSources()
   val blueprintsOrient = "com.tinkerpop.blueprints" % "blueprints-orient-graph" % Version.blueprints % "test" withSources()
   val blueprintsCore = "com.tinkerpop.blueprints" % "blueprints-core" % Version.blueprints % "provided" withSources()
-
+  val titan = "com.thinkaurelius.titan" % "titan" % Version.titan % "test"
+  val guava = "com.google.guava" % "guava" % Version.guava % "test"
 }
 
 // Root Module 
@@ -77,7 +80,7 @@ object RootBuild extends Build {
     </scm>
   )
 
-  val deps = Seq(slf4jApi, blueprintsCore, scalaTest, blueprintsOrient, blueprintsNeo4j, slf4jSimple)
+  val deps = Seq(slf4jApi, blueprintsCore, scalaTest, blueprintsOrient, blueprintsNeo4j, titan, guava, slf4jSimple)
 }
 
 
