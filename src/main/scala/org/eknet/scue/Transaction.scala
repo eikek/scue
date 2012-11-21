@@ -1,8 +1,9 @@
 package org.eknet.scue
 
 import com.tinkerpop.blueprints.TransactionalGraph
-import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.{ConcurrentMap, ConcurrentHashMap}
 import com.tinkerpop.blueprints.TransactionalGraph.Conclusion
+import collection.mutable
 
 /**
  * Introduces a simple tx concept as used by Neo4j
@@ -33,10 +34,14 @@ object Transaction {
   private val canCommit = 1
   private val rollbackOnly = -1
 
-  private val txmap = new ConcurrentHashMap[TransactionalGraph, java.lang.Integer]()
+  private val txmap = new ThreadLocal[ConcurrentMap[TransactionalGraph, java.lang.Integer]] {
+    override def initialValue() = {
+      new ConcurrentHashMap()
+    }
+  }
 
   def start(implicit db: TransactionalGraph): Transaction = {
-    if (txmap.putIfAbsent(db, canCommit) == null)
+    if (txmap.get().putIfAbsent(db, canCommit) == null)
       new TopTx(db)
     else
       new PlaceboTx(db)
@@ -47,7 +52,7 @@ object Transaction {
     def success() { committed = true }
 
     def finish() {
-      val successful = committed && txmap.remove(db) == canCommit
+      val successful = committed && txmap.get().remove(db) == canCommit
       if (successful) {
         db.stopTransaction(Conclusion.SUCCESS)
       } else {
@@ -61,7 +66,7 @@ object Transaction {
     def success() { committed = true }
     def finish() {
       if (!committed)
-        txmap.put(db, rollbackOnly)
+        txmap.get().put(db, rollbackOnly)
     }
   }
 }
