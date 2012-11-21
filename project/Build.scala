@@ -34,7 +34,7 @@ object Dependencies {
   val slf4jApi = "org.slf4j" % "slf4j-api" % Version.slf4j % "provided"
   val scalaTest = "org.scalatest" %% "scalatest" % Version.scalaTest % "test" withSources()
   val slf4jSimple = "org.slf4j" % "slf4j-simple" % Version.slf4j % "test"
-  val blueprintsNeo4j = "com.tinkerpop.blueprints" % "blueprints-neo4j-graph" % Version.blueprints % "test" withSources()
+//  val blueprintsNeo4j = "com.tinkerpop.blueprints" % "blueprints-neo4j-graph" % Version.blueprints % "test" withSources()
   val blueprintsOrient = "com.tinkerpop.blueprints" % "blueprints-orient-graph" % Version.blueprints % "test" withSources()
   val blueprintsCore = "com.tinkerpop.blueprints" % "blueprints-core" % Version.blueprints % "provided" withSources()
   val titan = "com.thinkaurelius.titan" % "titan" % Version.titan % "test"
@@ -80,7 +80,7 @@ object RootBuild extends Build {
     </scm>
   )
 
-  val deps = Seq(slf4jApi, blueprintsCore, scalaTest, blueprintsOrient, blueprintsNeo4j, titan, guava, slf4jSimple)
+  val deps = Seq(slf4jApi, blueprintsCore, scalaTest, blueprintsOrient, titan, guava, slf4jSimple)
 }
 
 
