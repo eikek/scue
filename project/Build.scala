@@ -57,8 +57,10 @@ object RootBuild extends Build {
   )
 
   override lazy val settings = super.settings ++ Seq(
-    version := "1.0.0-SNAPSHOT",
+    version := "0.1.0-SNAPSHOT",
     organization := "org.eknet.scue",
+    licenses := Seq(("ASL2", new URL("http://www.apache.org/licenses/LICENSE-2.0.txt"))),
+    scmInfo := Some(ScmInfo(new URL("https://eknet.org/gitr/?r=scue.git"), "scm:git:https://eknet.org/git/scue.git")),
     scalaVersion := Version.scala,
     exportJars := true,
     scalacOptions ++= Seq("-unchecked", "-deprecation"),
@@ -66,18 +68,7 @@ object RootBuild extends Build {
     publishTo := Some("eknet-maven2" at "https://eknet.org/maven2"),
     publishArtifact in Test := true,
     credentials += Credentials(Path.userHome / ".ivy2" / ".credentials"),
-    pomIncludeRepository := (_ => false),
-    pomExtra := <licenses>
-      <license>
-        <name>Apache 2</name>
-        <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-        <distribution>repo</distribution>
-      </license>
-    </licenses>
-    <scm>
-      <connection>scm:git:https://eknet.org/git/scue.git</connection>
-      <url>https://eknet.org/gitr/?r=scue.git</url>
-    </scm>
+    pomIncludeRepository := (_ => false)
   )
 
   val deps = Seq(slf4jApi, blueprintsCore, scalaTest, blueprintsOrient, titan, guava, slf4jSimple)
