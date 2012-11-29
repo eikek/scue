@@ -1,7 +1,7 @@
 package org.eknet.scue.util
 
 import com.tinkerpop.blueprints.{Edge, Vertex, Element}
-import org.eknet.scue.{EdgeType, VertexType, ElementType}
+import org.eknet.scue.{ElementId, EdgeType, VertexType, ElementType}
 import Operation.Operation
 
 /**
@@ -9,9 +9,9 @@ import Operation.Operation
  * @since 29.11.12 19:16
  */
 abstract sealed class Event(e: Element, kind: ElementType, op: Operation) {
-  def element = kind match {
-    case VertexType => Left(e.asInstanceOf[Vertex])
-    case EdgeType => Right(e.asInstanceOf[Edge])
+  def elementId = kind match {
+    case VertexType => ElementId(e.getId, VertexType)
+    case EdgeType => ElementId(e.getId, EdgeType)
   }
 }
 

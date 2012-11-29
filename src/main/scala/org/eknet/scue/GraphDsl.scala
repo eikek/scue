@@ -93,7 +93,7 @@ trait GraphDsl {
    *             exists and is therefore created.
    * @return
    */
-  def vertex(p: Property, init: Vertex => Unit = v => ())(implicit graph: KeyIndexableGraph) = {
+  def vertex(p: Property, init: Vertex => Unit = v => ())(implicit graph: KeyIndexableGraph): Vertex = {
     import collection.JavaConversions._
 
     graph.getIndexedKeys(VertexType.elementClass).find(_ == p._1) getOrElse {
@@ -103,6 +103,7 @@ trait GraphDsl {
     graph.getVertices(p._1, p._2).find(v => v.has(p)) getOrElse {
       val v = newVertex(init)
       v(p._1) = p._2
+      v
     }
   }
 

@@ -14,4 +14,8 @@ import com.tinkerpop.blueprints.{Element, Edge, Vertex}
  * @author Eike Kettner eike.kettner@gmail.com
  * @since 29.11.12 14:36
  */
-case class ElementId(id: AnyRef, kind: ElementType)
+case class ElementId(id: AnyRef, kind: ElementType) {
+  def this(e: Edge) = this(e.getId, EdgeType)
+  def this(v: Vertex) = this(v.getId, VertexType)
+  def this(e: Element, kind: ElementType) = this(e.getId, kind)
+}

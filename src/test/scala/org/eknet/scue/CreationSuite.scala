@@ -71,7 +71,7 @@ class CreationSuite extends DbFixture[TitanGraph] with ShouldMatchers with Befor
 
   test ("create vertex with properties") { implicit db =>
     withTx {
-      vertex("name" := "ref") --> "mylabel" --> newVertex("name" := "test", "redirect" := true)
+      vertex("name" := "ref") --> "mylabel" --> (newVertex += ("name" := "test", "redirect" := true))
     }
     withTx {
       val v = vertices("name" := "test").head
@@ -87,7 +87,7 @@ class CreationSuite extends DbFixture[TitanGraph] with ShouldMatchers with Befor
     )
 
     withTx {
-      vertex("name" := "ref") --> "mylabel" --> newVertex(props: _*)
+      vertex("name" := "ref") --> "mylabel" --> (newVertex += props)
     }
     withTx {
       val v = vertices("name" := "soldout").head

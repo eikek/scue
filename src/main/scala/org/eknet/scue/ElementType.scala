@@ -18,10 +18,10 @@ object ElementType {
   }
 }
 case object VertexType extends ElementType {
-  def name = "vertex"
-  def elementClass = classOf[Vertex]
+  val name = "vertex"
+  val elementClass = classOf[Vertex]
 }
 case object EdgeType extends ElementType {
-  def name = "edge"
-  def elementClass = classOf[Edge]
+  val name = "edge"
+  val elementClass = classOf[Edge]
 }

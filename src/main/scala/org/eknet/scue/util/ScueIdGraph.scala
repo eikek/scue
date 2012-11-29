@@ -1,9 +1,9 @@
 package org.eknet.scue.util
 
-import com.tinkerpop.blueprints.{Vertex, Element, Index, TransactionalGraph, Graph, IndexableGraph, KeyIndexableGraph}
+import com.tinkerpop.blueprints.{Edge, Vertex, Element, Index, TransactionalGraph, Graph, IndexableGraph, KeyIndexableGraph}
 import com.tinkerpop.blueprints.TransactionalGraph.Conclusion
 import com.tinkerpop.blueprints.util.wrappers.event.EventGraph
-import org.eknet.scue.{EdgeType, VertexType, GraphDsl, ElementType}
+import org.eknet.scue.{ElementId, EdgeType, VertexType, GraphDsl, ElementType}
 import java.util.UUID
 
 /**
@@ -42,7 +42,7 @@ class ScueIdGraph(g: Either[KeyIndexableGraph, IndexableGraph], idFactory: () =>
 
   indexableGraph.map(g => {
     ElementType.values.foreach { kind =>
-      if (g.getIndex(idIndexName, kind.elementClass) != null)
+      if (g.getIndex(idIndexName, kind.elementClass) == null)
          g.createIndex(idIndexName, kind.elementClass)
     }
   })
@@ -153,6 +153,10 @@ object ScueIdGraph {
   }
 
   def getId(element: Element): Option[String] = Option(element.getProperty(idProperty).asInstanceOf[String])
+
+  def getElementId(v: Vertex): Option[ElementId] = getElementId(v, VertexType)
+  def getElementId(e: Edge): Option[ElementId] = getElementId(e, EdgeType)
+  def getElementId(e: Element, kind: ElementType): Option[ElementId] = getId(e).map(id => ElementId(id, kind))
 
   def wrap(g: KeyIndexableGraph, initialize: Boolean): ScueIdGraph = {
     val graph = new ScueIdGraph(Left(g))
