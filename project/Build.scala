@@ -27,7 +27,7 @@ object Version {
   val blueprints = "2.1.0"
   val titan = "0.1.0"
   val guava = "13.0.1"
-  val neoswing = "2.0.0-SNAPSHOT"
+  val neoswing = "2.0.0-m1"
 }
 
 object Dependencies {

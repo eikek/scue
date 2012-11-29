@@ -38,8 +38,6 @@ trait GraphDsl {
 
   implicit def any2PropertyAssoc(x: String): PropertyAssoc = new PropertyAssoc(x)
 
-  implicit def mapToTuples[A](map: Map[String, A]) = map.toSeq
-
   /**
    * Looks up a vertex using the specified id.
    *
@@ -64,31 +62,25 @@ trait GraphDsl {
    * @param graph
    * @return
    */
-  def getElement(id: ElementId)(implicit graph: Graph) = id.kind match {
+  def findElement(id: ElementId)(implicit graph: Graph) = id.kind match {
     case VertexType => Option(graph.getVertex(id.id))
     case EdgeType => Option(graph.getEdge(id.id))
   }
-
   /**
    * Creates a new vertex and adds it to the graph.
    * @param graph
    * @return
    */
-  def newVertex(init: Vertex => Unit)(implicit graph: Graph): Vertex = {
-    val v = graph.addVertex(null)
+  def newVertex(id: AnyRef, init: Vertex => Unit)(implicit graph: Graph): Vertex = {
+    val v = graph.addVertex(id)
     init(v)
     v
   }
+  def newVertex(id: AnyRef)(implicit graph: Graph): Vertex = newVertex(id, v => ())
 
-  /**
-   * Creates a new vertex and adds it to the graph.
-   * @return
-   */
-  def newVertex(implicit graph: Graph): Vertex = newVertex(v => ())
+  def newVertex(init: Vertex => Unit)(implicit graph: Graph): Vertex = newVertex(null, init)
 
-  def newVertex(props: Property*)(implicit graph: Graph): Vertex = newVertex(v => {
-    props.foreach(p => v(p._1) = p._2)
-  })
+  def newVertex(implicit graph: Graph): Vertex = newVertex(null, v => ())
 
   /**
    * Creates a new vertex with the given key-value property
@@ -109,10 +101,8 @@ trait GraphDsl {
     }
 
     graph.getVertices(p._1, p._2).find(v => v.has(p)) getOrElse {
-      val v = graph.addVertex()
+      val v = newVertex(init)
       v(p._1) = p._2
-      init(v)
-      v
     }
   }
 
@@ -280,12 +270,64 @@ class RichElement(val el: Element) {
   import collection.JavaConversions._
   import GraphDsl.Property
 
+  /**
+   * Gets the value for the given key and casts it to the specified type.
+   * @param key
+   * @tparam A
+   * @return
+   */
   def get[A](key:String) = Option(el.getProperty(key)).map(_.asInstanceOf[A])
+
+  /**
+   * Gets the value for the given key.
+   * @param key
+   * @return
+   */
   def apply(key: String) = Option(el.getProperty(key))
+
+  /**
+   * Sets the given property for this element.
+   * @param p
+   * @return
+   */
   def update(p: Property): this.type = { el.setProperty(p._1, p._2); this }
+
+  /**
+   * Sets all given properties for this element.
+   * @param t
+   * @return
+   */
   def +=(t: Property*): this.type = { t.foreach(el => update(el._1, el._2)); this }
+
+  /**
+   * Sets all properties given in the map for this element.
+   *
+   * @param map
+   * @return
+   */
+  def +=(map: Map[String, Any]): this.type = this.+=(map.toSeq: _*)
+
+  /**
+   * Removes all given properties.
+   *
+   * @param keys
+   * @return
+   */
   def -=(keys: String*): this.type = { keys.foreach(k => el.removeProperty(k)); this }
+
+  /**
+   * Returns whether this element has all given properties set. All property values
+   * must equal.
+   * @param t
+   * @return
+   */
   def has(t: Property*) = t.foldLeft(true)((b, t) => b && get(t._1) == Option(t._2))
+
+  /**
+   * Returns all property keys for this element.
+   *
+   * @return
+   */
   def keySet = el.getPropertyKeys.toSet
 }
 

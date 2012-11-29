@@ -141,7 +141,7 @@ class ScueIdGraph(g: Either[KeyIndexableGraph, IndexableGraph], idFactory: () =>
 object ScueIdGraph {
 
   //some db impls don't like points in key property names.
-  private val idProperty = "org_eknet_scue_scueElementId"
+  private[util] val idProperty = "org_eknet_scue_scueElementId"
 
   private val defaultIdFactory = () => UUID.randomUUID().toString
 
