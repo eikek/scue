@@ -16,15 +16,16 @@
 
 package org.eknet.scue
 
-import com.tinkerpop.blueprints._
-import com.tinkerpop.blueprints.TransactionalGraph.Conclusion
+import scala.Tuple2
+import com.tinkerpop.blueprints.{Direction, TransactionalGraph, KeyIndexableGraph, Graph, Element, Edge, Vertex}
 
 /**
  * @author Eike Kettner eike.kettner@gmail.com
  * @since 29.10.12 19:26
  */
-object GraphDsl {
+trait GraphDsl {
   import collection.JavaConversions._
+  import GraphDsl.Property
 
   implicit def toVertex(v: RichVertex): Vertex = v.v
   implicit def toRichVertex(v: Vertex): RichVertex = new RichVertex(v)
@@ -32,11 +33,41 @@ object GraphDsl {
   implicit def toRichEdge(e: Edge): RichEdge= new RichEdge(e)
   implicit def toEdge(e: RichEdge): Edge = e.e
 
+  implicit def toRichElement(e: Element) = new RichElement(e)
+  implicit def toElement(re: RichElement) = re.el
+
   implicit def any2PropertyAssoc(x: String): PropertyAssoc = new PropertyAssoc(x)
 
-  type Property = (String, Any)
-
   implicit def mapToTuples[A](map: Map[String, A]) = map.toSeq
+
+  /**
+   * Looks up a vertex using the specified id.
+   *
+   * @param id
+   * @param graph
+   * @return
+   */
+  def findVertex(id: AnyRef)(implicit graph: Graph) = Option(graph.getVertex(id))
+
+  /**
+   * Looks up an edge using the specified id.
+   *
+   * @param id
+   * @param graph
+   * @return
+   */
+  def findEdge(id: AnyRef)(implicit graph: Graph) = Option(graph.getEdge(id))
+
+  /**
+   * Looksup either an edge or a vertex using the specified id.
+   * @param id
+   * @param graph
+   * @return
+   */
+  def getElement(id: ElementId)(implicit graph: Graph) = id.kind match {
+    case VertexType => Option(graph.getVertex(id.id))
+    case EdgeType => Option(graph.getEdge(id.id))
+  }
 
   /**
    * Creates a new vertex and adds it to the graph.
@@ -44,7 +75,7 @@ object GraphDsl {
    * @return
    */
   def newVertex(init: Vertex => Unit)(implicit graph: Graph): Vertex = {
-    val v = graph.addVertex()
+    val v = graph.addVertex(null)
     init(v)
     v
   }
@@ -58,9 +89,6 @@ object GraphDsl {
   def newVertex(props: Property*)(implicit graph: Graph): Vertex = newVertex(v => {
     props.foreach(p => v(p._1) = p._2)
   })
-
-  val vertexClass = classOf[Vertex]
-  val edgeClass = classOf[Edge]
 
   /**
    * Creates a new vertex with the given key-value property
@@ -76,8 +104,8 @@ object GraphDsl {
   def vertex(p: Property, init: Vertex => Unit = v => ())(implicit graph: KeyIndexableGraph) = {
     import collection.JavaConversions._
 
-    graph.getIndexedKeys(vertexClass).find(_ == p._1) getOrElse {
-      graph.createKeyIndex(p._1, vertexClass)
+    graph.getIndexedKeys(VertexType.elementClass).find(_ == p._1) getOrElse {
+      graph.createKeyIndex(p._1, VertexType.elementClass)
     }
 
     graph.getVertices(p._1, p._2).find(v => v.has(p)) getOrElse {
@@ -108,6 +136,10 @@ object GraphDsl {
       tx.finish()
     }
   }
+}
+
+object GraphDsl extends GraphDsl {
+  type Property = (String, Any)
 }
 
 final class EdgeOut(v: Vertex, label: String) {
@@ -244,7 +276,7 @@ class RichEdge(val e: Edge) extends RichElement(e) {
     case _ => sys.error("Given vertex is not part of this edge: "+ v)
   }
 }
-class RichElement(el: Element) {
+class RichElement(val el: Element) {
   import collection.JavaConversions._
   import GraphDsl.Property
 

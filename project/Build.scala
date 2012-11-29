@@ -27,18 +27,22 @@ object Version {
   val blueprints = "2.1.0"
   val titan = "0.1.0"
   val guava = "13.0.1"
+  val neoswing = "2.0.0-SNAPSHOT"
 }
 
 object Dependencies {
 
   val slf4jApi = "org.slf4j" % "slf4j-api" % Version.slf4j % "provided"
-  val scalaTest = "org.scalatest" %% "scalatest" % Version.scalaTest % "test" withSources()
-  val slf4jSimple = "org.slf4j" % "slf4j-simple" % Version.slf4j % "test"
-//  val blueprintsNeo4j = "com.tinkerpop.blueprints" % "blueprints-neo4j-graph" % Version.blueprints % "test" withSources()
-  val blueprintsOrient = "com.tinkerpop.blueprints" % "blueprints-orient-graph" % Version.blueprints % "test" withSources()
   val blueprintsCore = "com.tinkerpop.blueprints" % "blueprints-core" % Version.blueprints % "provided" withSources()
-  val titan = "com.thinkaurelius.titan" % "titan" % Version.titan % "test"
-  val guava = "com.google.guava" % "guava" % Version.guava % "test"
+
+  val testDeps = Seq(
+    "org.scalatest" %% "scalatest" % Version.scalaTest,
+    "org.slf4j" % "slf4j-simple" % Version.slf4j,
+    "com.tinkerpop.blueprints" % "blueprints-orient-graph" % Version.blueprints exclude("com.tinkerpop.blueprints", "blueprints-core") exclude("org.slf4j", "slf4j-log4j12") withSources(),
+    "com.thinkaurelius.titan" % "titan" % Version.titan exclude("com.tinkerpop.blueprints", "blueprints-core") exclude("org.slf4j", "slf4j-log4j12") withSources(),
+    "com.google.guava" % "guava" % Version.guava,
+    "org.eknet.neoswing" % "neoswing" % Version.neoswing exclude("ch.qos.logback", "logback-classic")
+  ) map(_ % "test")
 }
 
 // Root Module 
@@ -71,7 +75,7 @@ object RootBuild extends Build {
     pomIncludeRepository := (_ => false)
   )
 
-  val deps = Seq(slf4jApi, blueprintsCore, scalaTest, blueprintsOrient, titan, guava, slf4jSimple)
+  val deps = Seq(slf4jApi, blueprintsCore) ++ testDeps
 }
 
 
