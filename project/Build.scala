@@ -67,6 +67,7 @@ object RootBuild extends Build {
     scmInfo := Some(ScmInfo(new URL("https://eknet.org/gitr/?r=scue.git"), "scm:git:https://eknet.org/git/scue.git")),
     scalaVersion := Version.scala,
     exportJars := true,
+    resolvers += "eknet.org" at "https://eknet.org/maven2",
     scalacOptions ++= Seq("-unchecked", "-deprecation"),
     publishMavenStyle := true,
     publishTo := Some("eknet-maven2" at "https://eknet.org/maven2"),
