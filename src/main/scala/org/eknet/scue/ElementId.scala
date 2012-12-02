@@ -10,12 +10,14 @@ import com.tinkerpop.blueprints.{Element, Edge, Vertex}
  * transaction.
  *
  * @param id
- * @param kind
  * @author Eike Kettner eike.kettner@gmail.com
  * @since 29.11.12 14:36
  */
-case class ElementId(id: AnyRef, kind: ElementType) {
-  def this(e: Edge) = this(e.getId, EdgeType)
-  def this(v: Vertex) = this(v.getId, VertexType)
-  def this(e: Element, kind: ElementType) = this(e.getId, kind)
+case class ElementId[+A <: Element :Manifest](id: AnyRef) {
+  val kind = ElementType.from[A]
+}
+
+object ElementId {
+  def apply(v: Vertex): ElementId[Vertex] = ElementId[Vertex](v.getId)
+  def apply(e: Edge): ElementId[Edge] = ElementId[Edge](e.getId)
 }

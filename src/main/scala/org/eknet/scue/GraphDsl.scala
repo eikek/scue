@@ -62,10 +62,11 @@ trait GraphDsl {
    * @param graph
    * @return
    */
-  def findElement(id: ElementId)(implicit graph: Graph) = id.kind match {
-    case VertexType => Option(graph.getVertex(id.id))
-    case EdgeType => Option(graph.getEdge(id.id))
+  def findElement[A <: Element](id: ElementId[A])(implicit graph: Graph): Option[A] = id.kind match {
+    case VertexType => findVertex(id.id).asInstanceOf[Option[A]]
+    case EdgeType => findEdge(id.id).asInstanceOf[Option[A]]
   }
+
   /**
    * Creates a new vertex and adds it to the graph.
    * @param graph

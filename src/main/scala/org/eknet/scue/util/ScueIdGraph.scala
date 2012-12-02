@@ -154,9 +154,9 @@ object ScueIdGraph {
 
   def getId(element: Element): Option[String] = Option(element.getProperty(idProperty).asInstanceOf[String])
 
-  def getElementId(v: Vertex): Option[ElementId] = getElementId(v, VertexType)
-  def getElementId(e: Edge): Option[ElementId] = getElementId(e, EdgeType)
-  def getElementId(e: Element, kind: ElementType): Option[ElementId] = getId(e).map(id => ElementId(id, kind))
+  def getElementId(v: Vertex): Option[ElementId[Vertex]] = getId(v).map(id => ElementId[Vertex](id))
+  def getElementId(e: Edge): Option[ElementId[Edge]] = getId(e).map(id => ElementId[Edge](id))
+  def getElementId(e: Element, kind: ElementType): Option[ElementId[_]] = getId(e).map(id => ElementId(id))
 
   def wrap(g: KeyIndexableGraph, initialize: Boolean): ScueIdGraph = {
     val graph = new ScueIdGraph(Left(g))
