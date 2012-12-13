@@ -20,8 +20,8 @@ import Dependencies._
 
 object Version {
   val slf4j = "1.7.2"
-  val logback = "1.0.7"
-  val scalaTest = "2.0.M4"
+  val logback = "1.0.9"
+  val scalaTest = "2.0.M6-SNAP3"
   val grizzled = "0.6.9"
   val scala = "2.9.2"
   val blueprints = "2.1.0"
