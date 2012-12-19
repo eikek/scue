@@ -1,10 +1,8 @@
 package org.eknet.scue
 
-import org.scalatest.{BeforeAndAfter, FunSuite}
+import org.scalatest.BeforeAndAfter
 import org.scalatest.matchers.ShouldMatchers
-import com.tinkerpop.blueprints.{Edge, Vertex}
-import java.util.concurrent.{Callable, Executors, TimeUnit, CountDownLatch}
-import sun.util.logging.resources.logging
+import com.tinkerpop.blueprints.Edge
 import com.thinkaurelius.titan.core.TitanGraph
 
 /**
@@ -43,6 +41,7 @@ class CreationSuite extends DbFixture[TitanGraph] with ShouldMatchers with Befor
     withTx {
       val v0 = newVertex
       val v1 = newVertex
+      v0 -<>- ("label1", "label2") ends
       e = v0 <-- "test" <-- v1
       id0 = v0.getId
       id1 = v1.getId

@@ -108,10 +108,24 @@ trait GraphDsl {
     }
   }
 
-  def vertices(p: Property)(implicit db: Graph) =
-    db.getVertices(p._1, p._2).toIterable
+  private[this] def getSingle[A](iter: Iterator[A]) = {
+    if (!iter.hasNext) {
+      None
+    } else {
+      iter.next() match {
+        case x if (!iter.hasNext) => Some(x)
+        case _ => throw new IllegalStateException("There are more than one vertices with property "+p)
+      }
+    }
+  }
+
+  def singleVertex(p: Property)(implicit db: Graph) = getSingle(vertices(p).iterator)
+
+  def vertices(p: Property)(implicit db: Graph) = db.getVertices(p._1, p._2).toIterable
 
   def vertices(implicit db: Graph) = db.getVertices.toIterable
+
+  def singleEdge(p: Property)(implicit db: Graph) = getSingle(edges(p).iterator)
 
   def edges(p: Property)(implicit db: Graph) =
     db.getEdges(p._1, p._2).toIterable
