@@ -1,12 +1,9 @@
 package org.eknet.scue.util
 
-import org.scalatest.FunSuite
 import org.scalatest.matchers.ShouldMatchers
-import org.eknet.scue.{OrientDbFactory, TinkerDbFactory, TitanDbFactory, DbFixture}
-import com.thinkaurelius.titan.core.TitanGraph
-import com.tinkerpop.blueprints.impls.tg.{TinkerGraphFactory, TinkerGraph}
+import org.eknet.scue.{OrientDbFactory, DbFixture}
+import com.tinkerpop.blueprints.impls.tg.TinkerGraphFactory
 import com.tinkerpop.blueprints.{Graph, KeyIndexableGraph}
-import org.eknet.neoswing.utils.QuickView
 import com.tinkerpop.blueprints.impls.orient.OrientGraph
 
 /**

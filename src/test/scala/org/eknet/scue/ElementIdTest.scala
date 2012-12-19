@@ -1,9 +1,8 @@
 package org.eknet.scue
 
-import org.scalatest.FunSuite
 import org.scalatest.matchers.ShouldMatchers
 import com.tinkerpop.blueprints.impls.orient.OrientGraph
-import com.tinkerpop.blueprints.{Vertex, Element}
+import com.tinkerpop.blueprints.Element
 
 /**
  * @author Eike Kettner eike.kettner@gmail.com

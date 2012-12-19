@@ -1,6 +1,6 @@
 package org.eknet.scue.util
 
-import com.tinkerpop.blueprints.{Edge, Vertex, Element}
+import com.tinkerpop.blueprints.Element
 import org.eknet.scue.{ElementId, EdgeType, VertexType, ElementType}
 import Operation.Operation
 

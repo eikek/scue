@@ -1,7 +1,6 @@
 package org.eknet.scue.util
 
-import com.tinkerpop.blueprints.{Element, KeyIndexableGraph, Vertex, Edge, Graph}
-import com.tinkerpop.blueprints.util.wrappers.event.EventGraph
+import com.tinkerpop.blueprints.{Vertex, Edge, Graph}
 
 /**
  * @author Eike Kettner eike.kettner@gmail.com

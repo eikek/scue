@@ -1,10 +1,8 @@
 package org.eknet.scue
 
-import org.scalatest.{BeforeAndAfter, FunSuite}
+import org.scalatest.BeforeAndAfter
 import org.scalatest.matchers.ShouldMatchers
 import java.util.concurrent.{TimeUnit, CountDownLatch, Callable, Executors}
-import com.tinkerpop.blueprints.{TransactionalGraph, Vertex}
-import com.tinkerpop.blueprints.TransactionalGraph.Conclusion
 import java.util.concurrent.atomic.AtomicInteger
 import com.thinkaurelius.titan.core.TitanGraph
 

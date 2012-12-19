@@ -40,8 +40,8 @@ object Dependencies {
     "org.slf4j" % "slf4j-simple" % Version.slf4j,
     "com.tinkerpop.blueprints" % "blueprints-orient-graph" % Version.blueprints exclude("com.tinkerpop.blueprints", "blueprints-core") exclude("org.slf4j", "slf4j-log4j12"),
     "com.thinkaurelius.titan" % "titan" % Version.titan exclude("com.tinkerpop.blueprints", "blueprints-core") exclude("org.slf4j", "slf4j-log4j12"),
-    "com.google.guava" % "guava" % Version.guava,
-    "org.eknet.neoswing" % "neoswing" % Version.neoswing exclude("com.tinkerpop.blueprints", "blueprints-core") exclude("ch.qos.logback", "logback-classic")
+    "com.google.guava" % "guava" % Version.guava
+//    "org.eknet.neoswing" % "neoswing" % Version.neoswing exclude("com.tinkerpop.blueprints", "blueprints-core") exclude("ch.qos.logback", "logback-classic")
   ) map(_ % "test")
 }
 

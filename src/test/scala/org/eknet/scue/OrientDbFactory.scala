@@ -1,7 +1,6 @@
 package org.eknet.scue
 
 import java.io.File
-import java.util.concurrent.atomic.AtomicInteger
 import com.tinkerpop.blueprints.impls.orient.OrientGraph
 
 /**

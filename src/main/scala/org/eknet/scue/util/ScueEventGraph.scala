@@ -1,9 +1,9 @@
 package org.eknet.scue.util
 
 import com.tinkerpop.blueprints.util.wrappers.event.EventGraph
-import com.tinkerpop.blueprints.{Element, Edge, Vertex, Graph}
+import com.tinkerpop.blueprints.{Edge, Vertex, Graph}
 import com.tinkerpop.blueprints.util.wrappers.event.listener.GraphChangedListener
-import org.eknet.scue.{ElementType, EdgeType, VertexType}
+import org.eknet.scue.{EdgeType, VertexType}
 
 /**
  * A trait that can be mixed in with [[com.tinkerpop.blueprints.util.wrappers.event.EventGraph]]
