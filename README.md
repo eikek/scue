@@ -10,12 +10,12 @@ Add the library to your project, for example with [maven](http://maven.apache.or
     <dependency>
       <groupId>org.eknet.scue</groupId>
       <artifactId>scue_2.9.2</artifactId>
-      <version>0.1.0</version>
+      <version>0.2.0-SNAPSHOT</version>
     </dependency>
 
 or with [sbt](http://www.scala-sbt.org):
 
-    "org.eknet.scue" %% "scue" % "0.1.0"
+    "org.eknet.scue" %% "scue" % "0.2.0-SNAPSHOT"
 
 You can either mix in the trait `GraphDsl` or import the members of its companion
 object. Next, put a `Graph` object in scope and annotate it with the `implicit` keyword.
