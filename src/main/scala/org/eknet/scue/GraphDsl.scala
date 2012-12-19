@@ -114,7 +114,7 @@ trait GraphDsl {
     } else {
       iter.next() match {
         case x if (!iter.hasNext) => Some(x)
-        case _ => throw new IllegalStateException("There are more than one vertices with property "+p)
+        case _ => throw new IllegalStateException("There are more than one element.")
       }
     }
   }

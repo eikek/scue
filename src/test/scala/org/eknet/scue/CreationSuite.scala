@@ -41,7 +41,6 @@ class CreationSuite extends DbFixture[TitanGraph] with ShouldMatchers with Befor
     withTx {
       val v0 = newVertex
       val v1 = newVertex
-      v0 -<>- ("label1", "label2") ends
       e = v0 <-- "test" <-- v1
       id0 = v0.getId
       id1 = v1.getId
