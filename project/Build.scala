@@ -33,13 +33,13 @@ object Version {
 object Dependencies {
 
   val slf4jApi = "org.slf4j" % "slf4j-api" % Version.slf4j % "provided"
-  val blueprintsCore = "com.tinkerpop.blueprints" % "blueprints-core" % Version.blueprints % "provided" withSources()
+  val blueprintsCore = "com.tinkerpop.blueprints" % "blueprints-core" % Version.blueprints % "provided"
 
   val testDeps = Seq(
     "org.scalatest" %% "scalatest" % Version.scalaTest,
     "org.slf4j" % "slf4j-simple" % Version.slf4j,
-    "com.tinkerpop.blueprints" % "blueprints-orient-graph" % Version.blueprints exclude("com.tinkerpop.blueprints", "blueprints-core") exclude("org.slf4j", "slf4j-log4j12") withSources(),
-    "com.thinkaurelius.titan" % "titan" % Version.titan exclude("com.tinkerpop.blueprints", "blueprints-core") exclude("org.slf4j", "slf4j-log4j12") withSources(),
+    "com.tinkerpop.blueprints" % "blueprints-orient-graph" % Version.blueprints exclude("com.tinkerpop.blueprints", "blueprints-core") exclude("org.slf4j", "slf4j-log4j12"),
+    "com.thinkaurelius.titan" % "titan" % Version.titan exclude("com.tinkerpop.blueprints", "blueprints-core") exclude("org.slf4j", "slf4j-log4j12"),
     "com.google.guava" % "guava" % Version.guava,
     "org.eknet.neoswing" % "neoswing" % Version.neoswing exclude("com.tinkerpop.blueprints", "blueprints-core") exclude("ch.qos.logback", "logback-classic")
   ) map(_ % "test")
