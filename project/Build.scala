@@ -23,7 +23,7 @@ object Version {
   val logback = "1.0.9"
   val grizzled = "0.6.9"
   val scala = "2.9.2"
-  val blueprints = "2.1.0"
+  val blueprints = "2.2.0"
   val titan = "0.1.0"
   val guava = "13.0.1"
   val neoswing = "2.0.0-m1"
@@ -31,7 +31,7 @@ object Version {
   val scalaTestMap = Map(
     "2.9.2" -> "2.0.M6-SNAP3",
     "2.9.3-RC1" -> "2.0.M5",
-    "2.10.0-RC5" -> "2.0.M5-B1"
+    "2.10.0" -> "2.0.M5"
   )
 
 }
@@ -75,7 +75,7 @@ object RootBuild extends Build {
     scmInfo := Some(ScmInfo(new URL("https://eknet.org/gitr/?r=scue.git"), "scm:git:https://eknet.org/git/scue.git")),
     scalaVersion := Version.scala,
     exportJars := true,
-    resolvers += "eknet.org" at "https://eknet.org/maven2",
+    resolvers ++= Seq("eknet.org" at "https://eknet.org/maven2", "oracle.com" at "http://download.oracle.com/maven"),
     scalacOptions ++= Seq("-unchecked", "-deprecation"),
     publishMavenStyle := true,
     publishTo := Some("eknet-maven2" at "https://eknet.org/maven2"),
