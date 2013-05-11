@@ -97,13 +97,14 @@ trait GraphDsl {
   def vertex(p: Property, init: Vertex => Unit = v => ())(implicit graph: KeyIndexableGraph): Vertex = {
     import collection.JavaConversions._
 
-    graph.getIndexedKeys(VertexType.elementClass).find(_ == p._1) getOrElse {
-      graph.createKeyIndex(p._1, VertexType.elementClass)
+    val (name, value) = p
+    graph.getIndexedKeys(VertexType.elementClass).find(_ == name) getOrElse {
+      graph.createKeyIndex(name, VertexType.elementClass)
     }
 
-    graph.getVertices(p._1, p._2).find(v => v.has(p)) getOrElse {
+    graph.getVertices(name, value).find(v => v.has(p)) getOrElse {
       val v = newVertex(init)
-      v(p._1) = p._2
+      v(name) = value
       v
     }
   }
@@ -207,6 +208,8 @@ final class DynEdge(v: Vertex, dir: Direction, label: String) {
 
 class RichVertex(val v: Vertex) extends RichElement(v) {
 
+  import collection.JavaConverters._
+
   /**
    * Start creating a new outgoing edge.
    * @param label
@@ -260,7 +263,7 @@ class RichVertex(val v: Vertex) extends RichElement(v) {
    * @return
    */
   def adjacents(labels: String*) =
-    collection.JavaConversions.iterableAsScalaIterable(v.getVertices(Direction.BOTH, labels: _*))
+    v.getVertices(Direction.BOTH, labels: _*).asScala
 
   /**
    * Iterate over all edges.
@@ -269,7 +272,7 @@ class RichVertex(val v: Vertex) extends RichElement(v) {
    * @return
    */
   def edges(labels: String*) =
-    collection.JavaConversions.iterableAsScalaIterable(v.getEdges(Direction.BOTH, labels: _*))
+    v.getEdges(Direction.BOTH, labels: _*).asScala
 }
 
 class RichEdge(val e: Edge) extends RichElement(e) {
@@ -283,7 +286,7 @@ class RichEdge(val e: Edge) extends RichElement(e) {
   }
 }
 class RichElement(val el: Element) {
-  import collection.JavaConversions._
+  import collection.JavaConverters._
   import GraphDsl.Property
 
   /**
@@ -313,7 +316,7 @@ class RichElement(val el: Element) {
    * @param t
    * @return
    */
-  def +=(t: Property*): this.type = { t.foreach(el => update(el._1, el._2)); this }
+  def +=(t: Property*): this.type = { t.foreach({ case (name, value) => update(name, value) }); this }
 
   /**
    * Sets all properties given in the map for this element.
@@ -344,19 +347,19 @@ class RichElement(val el: Element) {
    *
    * @return
    */
-  def keySet = el.getPropertyKeys.toSet
+  def keySet = el.getPropertyKeys.asScala
 }
 
 class EdgeIterable(v: Vertex, dir: Direction, labels: Seq[String]) extends Iterable[Edge] {
-  import collection.JavaConversions._
+  import collection.JavaConverters._
 
-  def iterator = v.getEdges(dir, labels: _*).toIterator
+  def iterator = v.getEdges(dir, labels: _*).asScala.iterator
 
   /**
    * Iterate over adjencent vertices.
    * @return
    */
-  def ends = v.getVertices(dir, labels: _*).toIterable
+  def ends = v.getVertices(dir, labels: _*).asScala
 
   //shortcuts
   def findEnd(p: Vertex => Boolean) = ends find p
