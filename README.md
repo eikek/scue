@@ -17,6 +17,8 @@ or with [sbt](http://www.scala-sbt.org):
 
     "org.eknet.scue" %% "scue" % "0.2.0-SNAPSHOT"
 
+Please add the repository <https://eknet.org/maven2> to the build.
+
 You can either mix in the trait `GraphDsl` or import the members of its companion
 object. Next, put a `Graph` object in scope and annotate it with the `implicit` keyword.
 
