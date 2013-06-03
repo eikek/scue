@@ -291,14 +291,14 @@ class RichElement(val el: Element) {
    * @tparam A
    * @return
    */
-  def get[A](key:String) = Option(el.getProperty(key)).map(_.asInstanceOf[A])
+  def get[A](key:String) = Option(el.getProperty[A](key))
 
   /**
    * Gets the value for the given key.
    * @param key
    * @return
    */
-  def apply(key: String) = Option(el.getProperty(key))
+  def apply(key: String) = Option(el.getProperty[Any](key))
 
   /**
    * Sets the given property for this element.
@@ -328,7 +328,7 @@ class RichElement(val el: Element) {
    * @param keys
    * @return
    */
-  def -=(keys: String*): this.type = { keys.foreach(k => el.removeProperty(k)); this }
+  def -=(keys: String*): this.type = { keys.foreach(k => el.removeProperty[Any](k)); this }
 
   /**
    * Returns whether this element has all given properties set. All property values
