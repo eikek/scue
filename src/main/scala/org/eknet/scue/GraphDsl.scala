@@ -25,7 +25,6 @@ import com.tinkerpop.blueprints.{Direction, TransactionalGraph, KeyIndexableGrap
  */
 trait GraphDsl {
   import collection.JavaConversions._
-  import GraphDsl.Property
 
   implicit def toVertex(v: RichVertex): Vertex = v.v
   implicit def toRichVertex(v: Vertex): RichVertex = new RichVertex(v)
@@ -145,9 +144,7 @@ trait GraphDsl {
   }
 }
 
-object GraphDsl extends GraphDsl {
-  type Property = (String, Any)
-}
+object GraphDsl extends GraphDsl
 
 final class EdgeOut(v: Vertex, label: String) {
 
@@ -287,7 +284,6 @@ class RichEdge(val e: Edge) extends RichElement(e) {
 }
 class RichElement(val el: Element) {
   import collection.JavaConverters._
-  import GraphDsl.Property
 
   /**
    * Gets the value for the given key and casts it to the specified type.
@@ -340,7 +336,7 @@ class RichElement(val el: Element) {
    * @param t
    * @return
    */
-  def has(t: Property*) = t.foldLeft(true)((b, t) => b && get(t._1) == Option(t._2))
+  def has(t: Property*) = t.foldLeft(true)((b, t) => b && el.getProperty(t._1) == t._2)
 
   /**
    * Returns all property keys for this element.

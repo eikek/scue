@@ -19,12 +19,9 @@ import Keys._
 
 object Version {
   val slf4j = "1.7.2"
-  val logback = "1.0.9"
-  val grizzled = "0.6.9"
-  val scala = "2.9.2"
-  val blueprints = "2.2.0"
-  val titan = "0.1.0"
-  val guava = "13.0.1"
+  val scala = "2.10.1"
+  val blueprints = "2.3.0"
+  val titan = "0.3.1"
   val neoswing = "2.0.0-m1"
 
   val scalaTest = "1.9.1"
@@ -40,15 +37,15 @@ object Dependencies {
     "org.scalatest" %% "scalatest" % Version.scalaTest,
     "org.slf4j" % "slf4j-simple" % Version.slf4j,
     "com.tinkerpop.blueprints" % "blueprints-orient-graph" % Version.blueprints exclude("com.tinkerpop.blueprints", "blueprints-core") exclude("org.slf4j", "slf4j-log4j12"),
-    "com.thinkaurelius.titan" % "titan" % Version.titan exclude("com.tinkerpop.blueprints", "blueprints-core") exclude("org.slf4j", "slf4j-log4j12"),
-    "com.google.guava" % "guava" % Version.guava
+    "com.thinkaurelius.titan" % "titan-core" % Version.titan exclude("com.tinkerpop.blueprints", "blueprints-core") exclude("org.slf4j", "slf4j-log4j12"),
+    "com.thinkaurelius.titan" % "titan-berkeleyje" % Version.titan exclude("com.tinkerpop.blueprints", "blueprints-core") exclude("org.slf4j", "slf4j-log4j12")
 //    "org.eknet.neoswing" % "neoswing" % Version.neoswing exclude("com.tinkerpop.blueprints", "blueprints-core") exclude("ch.qos.logback", "logback-classic")
   ) map(_ % "test")
 }
 
 // Root Module 
 
-object RootBuild extends Build {
+object Build extends sbt.Build {
   import Dependencies._
 
   lazy val root = Project(

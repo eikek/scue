@@ -3,7 +3,6 @@ package org.eknet.scue
 import com.tinkerpop.blueprints.TransactionalGraph
 import java.util.concurrent.{ConcurrentMap, ConcurrentHashMap}
 import com.tinkerpop.blueprints.TransactionalGraph.Conclusion
-import collection.mutable
 
 /**
  * Introduces a simple tx concept as used by Neo4j
